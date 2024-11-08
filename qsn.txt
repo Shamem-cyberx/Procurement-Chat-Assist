@@ -1,0 +1,42 @@
+Time Period Inquiries:
+
+"Can you show me the total number of purchase orders created in March 2023?"
+"What were the total expenditures for the third quarter of fiscal year 2022-2023?"
+
+
+Department-Specific Questions:
+
+"What items did the Department of Transportation purchase in July 2023?"
+"Which department spent the most on IT goods in the last fiscal year?"
+
+
+Supplier Information:
+
+"List all purchases made from Acme Supplies in 2022."
+"How many suppliers have California Micro Business certifications?"
+
+
+Item and Quantity Queries:
+
+"What is the total quantity of 'Office Supplies' ordered in fiscal year 2021-2022?"
+"Can you tell me which items had the highest unit prices last year?"
+
+
+
+Acquisition Methods:
+
+"What acquisition methods were most commonly used by the Department of Justice in 2023?"
+"How many orders utilized the SB/DVBE Option in the last fiscal year?"
+
+
+
+Location-Based Queries:
+
+"Are there any suppliers in the 95814 ZIP code?"
+"What is the total spending for suppliers located in Northern California?"
+
+
+Cost Analysis:
+
+"What were the most expensive purchase orders in fiscal year 2013?"
+"Can you provide a summary of orders with quantities over 50 units?"

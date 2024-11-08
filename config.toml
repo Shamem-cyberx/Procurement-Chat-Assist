@@ -1,0 +1,15 @@
+[server]
+headless = true                      # Run Streamlit app without opening a browser
+port = 8502                           # Set the port for the Streamlit app
+maxMessageSize = 2000                 # Increase the max message size if needed
+enableCORS = false                    # Disable Cross-Origin Resource Sharing (CORS) for the app
+enableXsrfProtection = false          # Disable Cross-Site Request Forgery protection if cross-origin access is needed
+
+[browser]
+gatherUsageStats = false              # Disable usage statistics gathering to maintain privacy
+
+[logger]
+level = "warning"                     # Set logging level to "warning" to reduce verbosity (use "debug" for more detailed logs)
+
+[global]
+runOnSave = false                     # Disable automatic browser redirection when the app is saved

@@ -1,0 +1,14 @@
+pandas
+streamlit
+langchain
+pymongo
+openai
+tiktoken
+transformers
+sentence-transformers
+faiss-cpu
+chainlit
+haystack
+torch
+pyaudio
+watchdog

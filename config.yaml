@@ -1,0 +1,4 @@
+mongodb:
+  uri: "mongodb+srv://shamem0801:8VZFgXHZfzoHV0jh@cluster1.9kydj.mongodb.net/"
+  database: "chatbot"
+  collection: "chatbotcollection"

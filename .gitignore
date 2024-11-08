@@ -1,0 +1,34 @@
+# Ignore Python cache files
+__pycache__/
+*.py[cod]
+
+# Ignore environment files
+.env
+
+# Ignore virtual environment directories
+venv/
+
+# Ignore IDE configuration files (e.g., VS Code, PyCharm)
+.vscode/
+.idea/
+
+# Ignore Streamlit configuration files (if you want to ignore the Streamlit secrets file)
+.secrets/
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore Python packaging files (e.g., dist, egg-info)
+dist/
+build/
+*.egg-info/
+
+# Ignore log files
+*.log
+
+# Ignore dependency files (if you are using requirements.txt for example)
+*.txt
+
+# Ignore other temporary or system files
+.DS_Store
+Thumbs.db
