@@ -27,13 +27,13 @@ INTENTS = [
     "Total number of orders created within a date range"
 ]
 
+# Function to classify user intent
 def classify_intent(user_input):
-    """Classify the intent of the user query."""
     result = nlp(user_input, candidate_labels=INTENTS)
     return result['labels'][0]  # Return the top predicted intent
 
+# Function to recognize speech
 def recognize_speech():
-    """Recognize user speech input using the microphone."""
     recognizer = sr.Recognizer()
     with sr.Microphone() as source:
         st.write("Please say your query:")
@@ -47,36 +47,28 @@ def recognize_speech():
     except sr.RequestError as e:
         return f"Error: {e}"
 
-# Helper function to extract a number or text from the query
+# Helper function to extract numerical or textual values from a query
 def extract_value_from_query(query):
-    """Extract numerical or text values from a user query."""
     match = re.search(r'\b\d+\b', query)
     if match:
         return match.group()
     return None
 
-# Streamlit date input to ISODate format for MongoDB
+# Convert Streamlit date input to ISODate format for MongoDB
 def parse_date(date_input):
-    """Convert Streamlit date input to datetime object for MongoDB."""
     return datetime.combine(date_input, datetime.min.time())
 
-# MongoDB query functions (same as your existing code)
-
+# MongoDB query functions
 def get_orders_by_date_range(start_date, end_date):
-    """Get count of orders created within a specific date range."""
-    start_date = parse_date(start_date)  # Convert to datetime object
-    end_date = parse_date(end_date)  # Convert to datetime object
+    start_date = parse_date(start_date)
+    end_date = parse_date(end_date)
     return collection.count_documents({
         "Creation Date": {"$gte": start_date, "$lte": end_date}
     })
 
 def get_highest_spending_quarter():
-    """Find the quarter with the highest total spending."""
     pipeline = [
-        {"$group": {
-            "_id": {"$substr": ["$Creation Date", 0, 7]},  # Group by month-year
-            "total_spend": {"$sum": "$Total Price"}
-        }},
+        {"$group": {"_id": {"$substr": ["$Creation Date", 0, 7]}, "total_spend": {"$sum": "$Total Price"}}},
         {"$sort": {"total_spend": -1}},
         {"$limit": 1}
     ]
@@ -84,7 +76,6 @@ def get_highest_spending_quarter():
     return result[0] if result else None
 
 def frequently_ordered_items():
-    """Retrieve frequently ordered items."""
     pipeline = [
         {"$group": {"_id": "$Item Name", "count": {"$sum": 1}}},
         {"$sort": {"count": -1}},
@@ -93,15 +84,12 @@ def frequently_ordered_items():
     return list(collection.aggregate(pipeline))
 
 def get_supplier_details(supplier_code):
-    """Retrieve supplier details from the dataset."""
     return collection.find_one({"Supplier Code": int(supplier_code)})
 
 def get_items_by_department(department_name):
-    """Retrieve all items ordered by a specific department."""
-    return list(collection.find({"Department Name": department_name}))
+    return list(collection.find({"Department Name": {"$regex": department_name, "$options": "i"}}))
 
 def get_total_price_by_supplier(supplier_code):
-    """Calculate the total price for a supplier."""
     pipeline = [
         {"$match": {"Supplier Code": int(supplier_code)}},
         {"$group": {"_id": "$Supplier Name", "total_spend": {"$sum": "$Total Price"}}}
@@ -110,9 +98,8 @@ def get_total_price_by_supplier(supplier_code):
     return result[0] if result else None
 
 def get_total_procurement_cost(start_date, end_date):
-    """Calculate the total procurement cost within a specified time frame."""
-    start_date = parse_date(start_date)  # Convert to datetime object
-    end_date = parse_date(end_date)  # Convert to datetime object
+    start_date = parse_date(start_date)
+    end_date = parse_date(end_date)
     pipeline = [
         {"$match": {"Creation Date": {"$gte": start_date, "$lte": end_date}}},
         {"$group": {"_id": None, "total_cost": {"$sum": "$Total Price"}}}
@@ -121,24 +108,37 @@ def get_total_procurement_cost(start_date, end_date):
     return result[0] if result else None
 
 def compare_department_spending():
-    """Compare spending between departments."""
     pipeline = [
         {"$group": {"_id": "$Department Name", "total_spend": {"$sum": "$Total Price"}}},
         {"$sort": {"total_spend": -1}}
     ]
     return list(collection.aggregate(pipeline))
 
+# FAQ content (static)
+FAQ = {
+    "What is the item name of Supplier X?": "To get the item name of a supplier, please provide the supplier's code.",
+    "List the items ordered by Department X": "You can find the list of items by entering the department's name in the query.",
+    "How to check total spend by each supplier?": "You can check the total spend by a supplier by asking for total spend by the supplier code.",
+    "What is the procurement cost within a specific time frame?": "Specify the start and end dates to get the procurement cost within that range."
+}
+
 # Streamlit UI
+st.set_page_config(page_title="Penny AI - Procurement Assistant", page_icon=":guardsman:", layout="wide")
 st.title("Penny AI - Procurement Assistant")
 st.write("Ask me about procurement-related queries. I can assist with data from the State of California procurement dataset.")
 
-# Chat function to handle queries
+# Main chat function
 def chat():
-    user_input = st.text_input("Ask me a question:")
+    # Sidebar for FAQ
+    with st.sidebar:
+        st.subheader("FAQ")
+        for question, answer in FAQ.items():
+            with st.expander(question):
+                st.write(answer)
 
-    # Option to switch between speech and text input
+    user_input = st.text_input("Ask me a question:", key="user_input")
+
     input_method = st.radio("Select input method", ("Text", "Speech"))
-    
     if input_method == "Speech":
         user_input = recognize_speech()
     
@@ -147,8 +147,6 @@ def chat():
 
         intent = classify_intent(user_input)
         st.write(f"Intent detected: {intent}")
-
-        # Handle different intents (same as your existing code)
 
         if intent == "Total number of orders created during a specific time period":
             start_date = st.date_input("Start Date")
